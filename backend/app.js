@@ -5,10 +5,14 @@ const path = require('path');
 const connectDatabase = require('./config/connectDatabase');
 dotenv.config({path: path.join(__dirname, 'config', 'config.env')})
 
+
 const products = require('./routes/product');
 const orders = require('./routes/order');
 
 connectDatabase();
+
+// Middleware to parse incoming JSON requests and make the data available in req.body
+app.use(express.json())
 
 app.use('/api/v1/', products);
 app.use('/api/v1/', orders);

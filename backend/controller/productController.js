@@ -1,4 +1,4 @@
-const  productModel = require("../models/productModels");
+const  productModel = require("../models/productModel");
 
 // Get Products API - /api/v1/products
 exports.getProducts = async(req, res, next) =>{
@@ -26,7 +26,7 @@ exports.getSingleProducts = async (req, res, next) =>{
         )
         
     } catch (error) {
-        res.status(401).json(
+        res.status(404).json(
             {
                 success: false,
                 message: 'Unable to get Product with that ID'
