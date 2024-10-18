@@ -1,5 +1,6 @@
 const  productModel = require("../models/productModels");
 
+// Get Products API - /api/v1/products
 exports.getProducts = async(req, res, next) =>{
 
     const products = await productModel.find({});  // passing empty object i.e. getting all properties
@@ -12,11 +13,24 @@ exports.getProducts = async(req, res, next) =>{
     )
 }
 
-exports.getSingleProducts = (req, res, next) =>{
-    res.json(
+// Get Single Product API - /api/v1/products
+exports.getSingleProducts = async (req, res, next) =>{
+
+    try {
+        const product= await productModel.findById(req.params.id)
+        res.json(
         {
             success: true,
-            message: 'Get single products working!'
+            product
         }
-    )
+        )
+        
+    } catch (error) {
+        res.status(401).json(
+            {
+                success: false,
+                message: 'Unable to get Product with that ID'
+            }
+            )
+    }
 }
