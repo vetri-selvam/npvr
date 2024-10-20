@@ -23,6 +23,22 @@ export default function ProductDetails({cartItems, setCartItems}) {
         }
        
     }
+
+    function increaseQty(){
+        if (product.stock == qty){
+            return; //nothing
+        }
+        
+        setQty((state)=> state +1);
+    }
+
+    function decreaseQty(){
+        if (qty > 1){
+            setQty((state)=> state -1);
+        }
+
+    }
+
     return (
         product && (
             <div className="container container-fluid">
@@ -58,7 +74,7 @@ export default function ProductDetails({cartItems, setCartItems}) {
 
                         <p id="product_price">{product.price}</p>
                         <div className="stockCounter d-inline">
-                            <span className="btn btn-danger minus">-</span>
+                            <span className="btn btn-danger minus" onClick={decreaseQty}>-</span>
 
                             <input
                                 type="number"
@@ -67,7 +83,7 @@ export default function ProductDetails({cartItems, setCartItems}) {
                                 readOnly
                             />
 
-                            <span className="btn btn-primary plus">+</span>
+                            <span className="btn btn-primary plus" onClick={increaseQty}>+</span>
                         </div>
                         <button
                             type="button"
