@@ -10,9 +10,9 @@ export default function ProductCard({product}) {
                 />
                 <div className="card-body d-flex flex-column">
                     <h5 className="card-title">
-                        <a href="">
+                        <Link to={"/product/"+product._id}>
                         {product.name}
-                        </a>
+                        </Link>
                     </h5>
                     <div className="ratings mt-auto">
                         <div className="rating-outer">
