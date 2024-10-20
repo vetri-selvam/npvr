@@ -5,6 +5,9 @@ import Home from './pages/Home';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import ProductDetails from './pages/ProductDetails';
 import { useState } from 'react';
+import {ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function App() {
   const [cartItems, setCartItems] = useState([]);
 
@@ -13,6 +16,7 @@ function App() {
     <div className="App">
       <Router>
         <div>
+          <ToastContainer theme='dark' position='top-center'/>
           <Header cartItems={cartItems} />
           <Routes>
             <Route path='/' element={<Home />}/>
