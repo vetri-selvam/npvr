@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Search from "./Search";
 
-export default function Header() {
+export default function Header({cartItems}) {
     return (
         <nav className="navbar row">
             <div className="col-12 col-md-3">
@@ -19,7 +19,7 @@ export default function Header() {
                     Cart
                 </span>
                 <span className="ml-1" id="cart_count">
-                    2
+                    {cartItems.length}
                 </span>
             </div>
         </nav>

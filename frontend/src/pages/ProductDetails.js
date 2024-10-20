@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-export default function ProductDetails() {
+export default function ProductDetails({cartItems, setCartItems}) {
     const [product, setProduct] = useState(null);
+    const [qty, setQty] = useState(1);
     const { id } = useParams();
 
     useEffect(() => {
@@ -11,6 +12,15 @@ export default function ProductDetails() {
             .then((res) => setProduct(res.product));
     }, []);
 
+
+    function addToCart(){
+        const itemExist = cartItems.find((item)=>item.product._id == product._id);
+        if (!itemExist){
+            const newItems= {product, qty};
+       setCartItems((state)=>[...state, newItems]);
+        }
+       
+    }
     return (
         product && (
             <div className="container container-fluid">
@@ -51,7 +61,7 @@ export default function ProductDetails() {
                             <input
                                 type="number"
                                 className="form-control count d-inline"
-                                value="1"
+                                value={qty}
                                 readOnly
                             />
 
@@ -59,6 +69,7 @@ export default function ProductDetails() {
                         </div>
                         <button
                             type="button"
+                            onClick={addToCart}
                             id="cart_btn"
                             className="btn btn-primary d-inline ml-4"
                         >
@@ -72,9 +83,9 @@ export default function ProductDetails() {
                             <span
                                 id="stock_status"
                                 className={
-                                    product.stock > 0
-                                        ? product.stock == 1
-                                            ? "text-warning"
+                                    product.stock > 0?
+                                         product.stock == 1?
+                                             "text-warning"
                                         : "text-success"
                                     : "text-danger"
                                 }
