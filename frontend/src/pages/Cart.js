@@ -128,13 +128,13 @@ export default function Cart({ cartItems, setCartItems }) {
                             <p>
                                 Subtotal:{" "}
                                 <span class="order-summary-values">
-                                    1 (Units)
+                                    {cartItems.reduce((acc, item)=>(acc + item.qty), 0)} (Units)
                                 </span>
                             </p>
                             <p>
                                 Est. total:{" "}
                                 <span class="order-summary-values">
-                                    $245.67
+                                    $ {cartItems.reduce((acc, item)=>(acc + item.product.price * item.qty), 0)}    
                                 </span>
                             </p>
 
