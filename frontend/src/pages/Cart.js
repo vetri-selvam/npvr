@@ -1,7 +1,11 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function Cart({ cartItems, setCartItems }) {
+    const [complete, setComplete] = useState(false);
+
+
     function increaseQty(item) {
         if (item.product.stock == item.qty) {
             return; //nothing
@@ -29,6 +33,21 @@ export default function Cart({ cartItems, setCartItems }) {
         }
     }
 
+    function placeOrder() {
+        fetch(process.env.REACT_APP_API_URL + "/orders" ,
+            {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify(cartItems)
+            })
+            .then(()=>{
+                setCartItems([]);
+                setComplete(true);
+                toast("Item Placed");
+            })
+    
+    }
+
     function removeItem(item) {
         const updatedItems = cartItems.filter((i) => {
             if (i.product._id !== item.product._id) {
@@ -41,18 +60,18 @@ export default function Cart({ cartItems, setCartItems }) {
 
     return (
         cartItems.length > 0?<Fragment>
-            <div class="container container-fluid">
-                <h2 class="mt-5">
+            <div className="container container-fluid">
+                <h2 className="mt-5">
                     Your Cart: <b>{cartItems.length} items</b>
                 </h2>
-                <div class="row d-flex justify-content-between">
-                    <div class="col-12 col-lg-8">
+                <div className="row d-flex justify-content-between">
+                    <div className="col-12 col-lg-8">
                         {cartItems.map((item) => (
                             <Fragment>
                                 <hr />
-                                <div class="cart-item">
-                                    <div class="row">
-                                        <div class="col-4 col-lg-3">
+                                <div className="cart-item">
+                                    <div className="row">
+                                        <div className="col-4 col-lg-3">
                                             <img
                                                 src={
                                                     item.product.images[0].image
@@ -63,7 +82,7 @@ export default function Cart({ cartItems, setCartItems }) {
                                             />
                                         </div>
 
-                                        <div class="col-5 col-lg-3">
+                                        <div className="col-5 col-lg-3">
                                             <Link
                                                 to={
                                                     "/product/" +
@@ -74,16 +93,16 @@ export default function Cart({ cartItems, setCartItems }) {
                                             </Link>
                                         </div>
 
-                                        <div class="col-4 col-lg-2 mt-4 mt-lg-0">
+                                        <div className="col-4 col-lg-2 mt-4 mt-lg-0">
                                             <p id="card_item_price">
                                                 {item.product.price}
                                             </p>
                                         </div>
 
-                                        <div class="col-4 col-lg-3 mt-4 mt-lg-0">
-                                            <div class="stockCounter d-inline">
+                                        <div className="col-4 col-lg-3 mt-4 mt-lg-0">
+                                            <div className="stockCounter d-inline">
                                                 <span
-                                                    class="btn btn-danger minus"
+                                                    className="btn btn-danger minus"
                                                     onClick={() =>
                                                         decreaseQty(item)
                                                     }
@@ -92,13 +111,13 @@ export default function Cart({ cartItems, setCartItems }) {
                                                 </span>
                                                 <input
                                                     type="number"
-                                                    class="form-control count d-inline"
+                                                    className="form-control count d-inline"
                                                     value={item.qty}
                                                     readOnly
                                                 />
 
                                                 <span
-                                                    class="btn btn-primary plus"
+                                                    className="btn btn-primary plus"
                                                     onClick={() =>
                                                         increaseQty(item)
                                                     }
@@ -108,11 +127,11 @@ export default function Cart({ cartItems, setCartItems }) {
                                             </div>
                                         </div>
 
-                                        <div class="col-4 col-lg-1 mt-4 mt-lg-0">
+                                        <div className="col-4 col-lg-1 mt-4 mt-lg-0">
                                             <i
                                                 id="delete_cart_item"
                                                 onClick={() => removeItem(item)}
-                                                class="fa fa-trash btn btn-danger"
+                                                className="fa fa-trash btn btn-danger"
                                             ></i>
                                         </div>
                                     </div>
@@ -121,27 +140,28 @@ export default function Cart({ cartItems, setCartItems }) {
                         ))}
                     </div>
 
-                    <div class="col-12 col-lg-3 my-4">
+                    <div className="col-12 col-lg-3 my-4">
                         <div id="order_summary">
                             <h4>Order Summary</h4>
                             <hr />
                             <p>
                                 Subtotal:{" "}
-                                <span class="order-summary-values">
+                                <span className="order-summary-values">
                                     {cartItems.reduce((acc, item)=>(acc + item.qty), 0)} (Units)
                                 </span>
                             </p>
                             <p>
                                 Est. total:{" "}
-                                <span class="order-summary-values">
-                                    $ {cartItems.reduce((acc, item)=>(acc + item.product.price * item.qty), 0)}    
+                                <span className="order-summary-values">
+                                    $ {Number(cartItems.reduce((acc, item)=>(acc + item.product.price * item.qty), 0)).toFixed(2)}    
                                 </span>
                             </p>
 
                             <hr />
                             <button
                                 id="checkout_btn"
-                                class="btn btn-primary btn-block"
+                                onClick={placeOrder}
+                                className="btn btn-primary btn-block"
                             >
                                 Place Order
                             </button>
@@ -149,6 +169,11 @@ export default function Cart({ cartItems, setCartItems }) {
                     </div>
                 </div>
             </div>
-        </Fragment>: <h2 class='mt-5'>Cart is Empty🛒</h2>
-    );
+        </Fragment>:(!complete? <h2 className='mt-5'>Cart is Empty🛒</h2>
+                    :<Fragment>
+                        <h2 className='mt-5'>All Order Placed✅</h2>
+                        <p>Your order has been placed successfully!!</p>
+                    </Fragment>
+                    )
+    )
 }
