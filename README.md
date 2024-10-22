@@ -1,5 +1,4 @@
-# E-Commerce Project
-
+# NPVR -An E-Commerce Project
 ## Overview
 This project is an e-commerce platform designed to provide a seamless shopping experience for users. It includes features such as product browsing, shopping cart, checkout, and user authentication.
 
